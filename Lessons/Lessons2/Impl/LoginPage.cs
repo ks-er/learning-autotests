@@ -16,12 +16,24 @@
             this.webDriver = webDriver;
         }
 
+        public void NavigateAuth(string login, string pass)
+        {
+            this.webDriver.Navigate().GoToUrl(this.url);
+            this.Authorization(login, pass);
+        }
+
+        internal bool IsElementExist(By xpath)
+        {
+            var element = webDriver.FindElement(xpath);
+            return element != null;
+        }
+
         /// <summary>
         /// Методж авторизации
         /// </summary>
         /// <param name="login"></param>
         /// <param name="pass"></param>
-        internal void Authorization(string login, string pass)
+        private void Authorization(string login, string pass)
         {
             var loginEl = webDriver.FindElement(loginInput);
 
@@ -30,12 +42,6 @@
             var passEl = loginEl.FindElement(passInput);
             passEl.SendKeys(pass);
             webDriver.FindElement(logInButton).Click();
-        }
-
-        internal bool IsElementExist(By xpath)
-        {
-            var element = webDriver.FindElement(xpath);
-            return element != null;
         }
     }
 }

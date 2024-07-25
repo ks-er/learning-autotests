@@ -33,10 +33,8 @@ namespace Lessons2
         [Test]
         public void TestAuthorizationEmptyError()
         {
-            this.driver.Navigate().GoToUrl(this.loginPage.url);
+            this.loginPage.NavigateAuth(String.Empty, String.Empty);
             var errorMessage = By.XPath($"//div[contains(h3,'{Lesson2Test.AuthorizationEmptyErrorMessage}')]");
-
-            this.loginPage.Authorization(String.Empty, String.Empty);
 
             // Проверка появления сообщения об ошибке
             Assert.IsTrue(this.loginPage.IsElementExist(errorMessage));
@@ -45,10 +43,8 @@ namespace Lessons2
         [Test]
         public void TestAuthorizationPasswordError()
         {
-            this.driver.Navigate().GoToUrl(this.loginPage.url);
+            this.loginPage.NavigateAuth("performance_glitch_user", "performance_glitch_user");            
             var errorMessage = By.XPath($"//div[contains(h3,'{Lesson2Test.AuthorizationPasswordErrorMessage}')]");
-
-            this.loginPage.Authorization("performance_glitch_user", "performance_glitch_user");
 
             // Проверка появления сообщения об ошибке
             Assert.IsTrue(this.loginPage.IsElementExist(errorMessage));
@@ -57,27 +53,23 @@ namespace Lessons2
         [Test]
         public void TestSuccessAuth()
         {
-            this.driver.Navigate().GoToUrl(this.loginPage.url);
+            this.loginPage.NavigateAuth("performance_glitch_user", "performance_glitch_user");
+
             var titleElem = By.XPath($"//title[contains(text(),'Swag Labs')]");
-
-            this.loginPage.Authorization("performance_glitch_user", "performance_glitch_user");
-
             Assert.IsTrue(this.loginPage.IsElementExist(titleElem));
         }
 
         [Test]
         public void TestProductListCount()
         {
-            this.driver.Navigate().GoToUrl(this.loginPage.url);            
-            this.loginPage.Authorization("performance_glitch_user", "secret_sauce");
+            this.loginPage.NavigateAuth("performance_glitch_user", "secret_sauce");
             Assert.That(6, Is.EqualTo(this.productListPage.ProductList().Count()));
         }
 
         [Test]
         public void TestAddToCard()
         {
-            this.driver.Navigate().GoToUrl(this.loginPage.url);
-            this.loginPage.Authorization("performance_glitch_user", "secret_sauce");
+            this.loginPage.NavigateAuth("performance_glitch_user", "secret_sauce");
             this.productListPage.AddToCart(this.productListPage.labsBackpackBtn);
 
             Assert.IsTrue(this.loginPage.IsElementExist(this.productListPage.labsBackpackRemoveBtn));
@@ -86,8 +78,7 @@ namespace Lessons2
         [Test]
         public void TestAddSomeProductsToCard()
         {
-            this.driver.Navigate().GoToUrl(this.loginPage.url);
-            this.loginPage.Authorization("performance_glitch_user", "secret_sauce");
+            this.loginPage.NavigateAuth("performance_glitch_user", "secret_sauce");
             this.productListPage.AddToCart(this.productListPage.labsBackpackBtn);
             this.productListPage.AddToCart(this.productListPage.fleeceJacketBtn);
             this.productListPage.AddToCart(this.productListPage.testAllTheThingsBtn);
@@ -98,8 +89,7 @@ namespace Lessons2
         [Test]
         public void TestSortProducts()
         {
-            this.driver.Navigate().GoToUrl(this.loginPage.url);
-            this.loginPage.Authorization("performance_glitch_user", "secret_sauce");
+            this.loginPage.NavigateAuth("performance_glitch_user", "secret_sauce");
             this.productListPage.SortProducts(this.productListPage.lohiSortBtn);
             
             Assert.IsTrue(this.productListPage.IsProductsSorted());

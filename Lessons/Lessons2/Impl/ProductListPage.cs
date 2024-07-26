@@ -26,8 +26,6 @@
         /// <summary>
         /// Возврщает список продуктов/товаров
         /// </summary>
-        /// <param name="login"></param>
-        /// <param name="pass"></param>
         internal List<IWebElement> ProductList()
         {
             return webDriver.FindElements(productList).ToList();
@@ -78,7 +76,7 @@
         /// <summary>
         /// Метод для проверки на упорядоченность по возрастанию
         /// </summary>
-        /// <param name="dataSource">Список данных</param>
+        /// <param name="list">Список данных</param>
         /// <returns>true - данные отсортированы по возрастанию, false - в противном случае</returns>
         private bool IsSortedAscending(List<decimal> list)
         {

@@ -22,6 +22,11 @@
             this.Authorization(login, pass);
         }
 
+        /// <summary>
+        /// Проверка на наличие элемента на странице
+        /// </summary>
+        /// <param name="xpath"></param>
+        /// <returns></returns>
         internal bool IsElementExist(By xpath)
         {
             var element = webDriver.FindElement(xpath);
@@ -29,7 +34,7 @@
         }
 
         /// <summary>
-        /// Методж авторизации
+        /// Метод авторизации
         /// </summary>
         /// <param name="login"></param>
         /// <param name="pass"></param>

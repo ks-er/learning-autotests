@@ -15,7 +15,7 @@ namespace Lessons2
         private LoginPage loginPage;
         private ProductListPage productListPage;
 
-        [OneTimeSetUp]
+        [SetUp]
         public void Setup()
         {
             var dr = new ChromeDriver();
@@ -24,7 +24,7 @@ namespace Lessons2
             this.productListPage = new ProductListPage(dr);
         }
 
-        [OneTimeTearDown]
+        [TearDown]
         public void TearDown() 
         {
             this.driver.Quit(); 

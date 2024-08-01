@@ -25,12 +25,10 @@
         public bool CompareVersions()
         {
             var currVersionHeader = this.GetColumnHeader("Текущая версия");
-            var id1 = this.GetAttribute(currVersionHeader, "id");
             var newVersionHeader = this.GetColumnHeader("Новая версия");
-            var id2 = this.GetAttribute(newVersionHeader, "id");
 
-            var currVersionList = this.GetVersionList(id1.Split('-')[1]);
-            var newVersionList = this.GetVersionList(id2.Split('-')[1]);
+            var currVersionList = this.GetVersionList(this.GetColumnId(currVersionHeader));
+            var newVersionList = this.GetVersionList(this.GetColumnId(newVersionHeader));
 
             return currVersionList.SequenceEqual(newVersionList);
         }

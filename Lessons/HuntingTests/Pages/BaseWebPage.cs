@@ -9,9 +9,9 @@
     /// <summary>
     /// Основной класс с тестовыми методами, которыемогут быть применены в реестре
     /// </summary>
-    public class BaseWebPage
+    public abstract class BaseWebPage
     {
-        private string path;
+        protected string path;
         public BaseDriver driver { get; private set; }
 
         public BaseWebPage(BaseDriver baseDriver, string path)
@@ -42,6 +42,12 @@
             var columHeader = this.driver.GetElement(
                 By.XPath($"//div[@class = 'x-column-header-inner']//span[text() = '{columnName}']"));
             return columHeader;
+        }
+
+        public string GetColumnId(IWebElement webElement)
+        {
+            var id = this.GetAttribute(webElement, "id");
+              return id.Split('-')[1];
         }
 
         public string GetAttribute(IWebElement elem, string attrName)

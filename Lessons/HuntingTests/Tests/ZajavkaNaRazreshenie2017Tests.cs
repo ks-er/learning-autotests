@@ -1,0 +1,34 @@
+﻿namespace HuntingTests.Tests
+{
+    using HuntingTests.Pages;
+
+    /// <summary>
+    /// Класс с тестами для "Заявка на разрешение 2017"
+    /// </summary>
+    public class ZajavkaNaRazreshenie2017Tests : BaseTestClass
+    {
+        private ZajavkaNaRazreshenie2017Page page;
+
+        public override void SetUp()
+        {
+            base.SetUp();
+            this.page = new ZajavkaNaRazreshenie2017Page(this.Driver);
+        }
+
+        /// <summary>
+        /// Проверяет не зависла ли отправка статусов олпат на ЕПГУ
+        /// </summary>
+        [Test]
+        public void SendPaidStateToEpguTest()
+        {
+            this.page.OpenPage();
+            this.page.SetDateOperator("Дата заявления", "Больше или равно");
+            this.page.SetDateFilter("Дата заявления", DateTime.Now.AddMonths(-2));
+            this.page.SetStateFilter("Статус оплаты", "Ожидает оплаты");
+            this.page.ScrollGrid();
+            this.page.SetStateFilter("Квитирование ГИС ГМП", "Сквитировано");
+            Thread.Sleep(3000);
+            Assert.IsTrue(this.page.GetRecordsCount() < 100);
+        }
+    }
+}

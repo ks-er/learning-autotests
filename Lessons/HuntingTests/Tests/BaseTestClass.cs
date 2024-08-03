@@ -19,7 +19,7 @@
         /// <summary>
         /// Запуск браузера и авторизация перед любым классом с тестами
         /// </summary>
-        [SetUp]
+        [OneTimeSetUp]
         public virtual void SetUp()
         {
             this.Driver = new BaseDriver();
@@ -36,7 +36,7 @@
         /// <summary>
         /// Выключение драйвера после всех тестов в ондом классе
         /// </summary>
-        [TearDown]
+        [OneTimeTearDown]
         public void Quit()
         {
             this.Driver.Queit();

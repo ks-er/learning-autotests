@@ -11,6 +11,8 @@
     /// </summary>
     public class ControlCenterPage: BaseWebPage
     {
+        private By GoToMainLocator = By.XPath("//span[contains(text(), 'Перейти на главную')]");
+
         public ControlCenterPage(BaseDriver driver) : base(driver, "/action/setup") 
         {
         }
@@ -31,6 +33,11 @@
             var newVersionList = this.GetVersionList(this.GetColumnId(newVersionHeader));
 
             return currVersionList.SequenceEqual(newVersionList);
+        }
+
+        public void GoToStartPage()
+        {
+            this.driver.Click(this.GoToMainLocator);
         }
 
         /// <summary>

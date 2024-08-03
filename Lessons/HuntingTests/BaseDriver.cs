@@ -39,7 +39,7 @@
         private WebDriver StartBrowser()
         { 
             var driver = new ChromeDriver();
-            //driver.Manage().Window.Maximize();
+            driver.Manage().Window.Maximize();
 
             return driver;
         }
@@ -102,6 +102,18 @@
         public void Click(By locator, TimeSpan timeSpan = default)
         {
             var elementToClick = this.GetElement(locator);
+            this.Click(elementToClick, locator, timeSpan);
+        }
+
+        /// <summary>
+        /// Нажимает на элемент
+        /// </summary>
+        /// <param name="locator"></param>
+        public void Click(
+            IWebElement elementToClick,
+            By locator,
+            TimeSpan timeSpan = default)
+        {
             this.WaitUntilElementClicable(locator, timeSpan);
             elementToClick.Click();
         }

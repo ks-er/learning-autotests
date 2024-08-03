@@ -22,12 +22,33 @@
         public void SendPaidStateToEpguTest()
         {
             this.page.OpenPage();
+            this.page.ResetFilters();
+
             this.page.SetDateOperator("Дата заявления", "Больше или равно");
             this.page.SetDateFilter("Дата заявления", DateTime.Now.AddMonths(-2));
             this.page.SetStateFilter("Статус оплаты", "Ожидает оплаты");
             this.page.ScrollGrid();
             this.page.SetStateFilter("Квитирование ГИС ГМП", "Сквитировано");
-            Thread.Sleep(3000);
+            this.page.WaitRecords();
+
+            Assert.IsTrue(this.page.GetRecordsCount() < 100);
+        }
+
+        [Test]
+        public void SendPaymentToGISTest()
+        {
+            this.page.OpenPage();
+            this.page.ResetFilters();
+
+            this.page.SetDateOperator("Дата заявления", "Больше или равно");
+            this.page.SetDateFilter("Дата заявления", DateTime.Now.AddMonths(-1));
+            this.page.SetStateFilter("Статус заявки", "Новая");
+            this.page.SetStateFilter("Статус оплаты", "Не отправлено");
+            this.page.ScrollGrid();
+            this.page.SetStateFilter("Способ подачи заявки", "ЕПГУ");
+            this.page.SetStateFilter("Этап проверки", "Пройдено");
+            this.page.WaitRecords();
+
             Assert.IsTrue(this.page.GetRecordsCount() < 100);
         }
     }

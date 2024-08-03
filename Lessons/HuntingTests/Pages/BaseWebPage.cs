@@ -23,7 +23,7 @@
         /// <summary>
         /// Открытие страницы
         /// </summary>
-        public void OpenPage()
+        public virtual void OpenPage()
         {
             this.driver.GoToUrl(path);
         }
@@ -53,6 +53,12 @@
         public string GetAttribute(IWebElement elem, string attrName)
         {
             return elem.GetAttribute(attrName);
+        }
+
+        public void Logout()
+        {
+            this.driver.Click(
+                By.XPath("//div[contains(@class, 'desktop-bar desktop-menu')]//span[text() = 'Выход из системы']"));
         }
     }
 }

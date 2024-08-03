@@ -26,6 +26,7 @@
             this.page.ClickToSection("Миграция");
 
             Assert.IsTrue(this.page.CompareVersions());
+            this.page.GoToStartPage();
         }
     }
 }

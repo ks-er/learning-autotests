@@ -10,10 +10,35 @@
     public abstract class RegistryPage : BaseWebPage
     {
         private string gridIdPart;
+        private string registryName;
 
-        public RegistryPage(BaseDriver driver, string path, string gridIdPart) : base(driver, path)
+        public RegistryPage(
+            BaseDriver driver, 
+            string path, 
+            string gridIdPart,
+            string registryName) : base(driver, path)
         {
             this.gridIdPart = gridIdPart;
+            this.registryName = registryName;
+        }
+
+        /// <summary>
+        /// Открытие страницы
+        /// </summary>
+        public override void OpenPage()
+        {
+            var element = this.driver.GetElement(By.XPath("//div[@class = 'title-body']"));
+            if (element?.Text == this.registryName)
+            {
+                return;
+            }
+
+            this.driver.GoToUrl(path);
+        }
+
+        public void WaitRecords()
+        {
+            Thread.Sleep(3000);
         }
 
         public void SetDateOperator(
@@ -27,6 +52,11 @@
                 By.XPath($"//div[@id = 'gridcolumn-{id}']//tr[contains(@id, 'datefield-')]//div[contains(@class, '-operator-button')]"));
             this.driver.Click(By.XPath($"//a[contains(@class, 'x-menu-item-link')]//span[contains(text(), '{btnText}')]"),
                 TimeSpan.FromSeconds(20));
+        }
+
+        public void ResetFilters()
+        {
+            this.driver.Click(By.XPath("//span[text() = 'Сбросить фильтрацию']"));
         }
 
         /// <summary>
@@ -60,13 +90,16 @@
         /// <param name="value"></param>
         public void SetStateFilter(string columnName, string value)
         {
-            this.driver.Click(
-                By.XPath($"//div[@class = 'x-column-header-inner']//span[text() = '{columnName}']/../..//input"),
-                TimeSpan.FromSeconds(20));
+            var columnLocator = By.XPath($"//div[@class = 'x-column-header-inner']//span[text() = '{columnName}']/../..//input");
+            var elementToClick = this.driver.GetElement(columnLocator);
+
+            this.driver.Click(elementToClick, columnLocator, TimeSpan.FromSeconds(20));
 
             this.driver.Click(
                 By.XPath($"//div[contains(@class, 'x-boundlist-list-ct')]//li[text() = '{value}']"),
                 TimeSpan.FromSeconds(20));
+
+            elementToClick.SendKeys(Keys.Enter);
         }
 
         /// <summary>

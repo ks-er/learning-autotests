@@ -1,9 +1,7 @@
 ﻿namespace HuntingTests.Pages
 {
-    using OpenQA.Selenium;
-
     /// <summary>
-    /// Основной класс с тестовыми методами, которые могут быть применены в реестре
+    /// Страница реестра Заявка на разрешение
     /// </summary>
     public class ZajavkaNaRazreshenie2017Page : RegistryPage
     {

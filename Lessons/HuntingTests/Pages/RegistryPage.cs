@@ -135,11 +135,11 @@
                 By.XPath($"//div[contains(@id, '{this.gridIdPart}-') and contains(@id, '-body')]"));
         }
 
-        public void ScrollGrid()
+        public void ScrollGrid(string? startValue = null)
         {
             var gridView = this.driver.GetElement(
                 By.XPath($"//div[contains(@id, '{this.gridIdPart}-') and contains(@id, '-body')]//div[contains(@class, 'x-grid-view')]"));
-            this.driver.ScrollIntoElement(gridView);
+            this.driver.ScrollIntoElement(gridView, startValue);
         }
     }
 }

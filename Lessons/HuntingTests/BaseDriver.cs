@@ -138,10 +138,14 @@
             }
         }
 
-        public void ScrollIntoElement(IWebElement webElement)
+        public void ScrollIntoElement(IWebElement webElement, string startValue)
         {
             var js = (IJavaScriptExecutor)driver;
-            js.ExecuteScript("arguments[0].scrollTo(arguments[0].scrollWidth, arguments[0].scrollWidth);", webElement);
+            var scrollValue = startValue != null
+                ? startValue
+                : "arguments[0].scrollWidth";
+            
+            js.ExecuteScript($"arguments[0].scrollTo({scrollValue}, arguments[0].scrollWidth);", webElement);
         }
 
         /// <summary>

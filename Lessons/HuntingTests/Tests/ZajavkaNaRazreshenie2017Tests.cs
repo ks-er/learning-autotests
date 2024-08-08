@@ -1,10 +1,18 @@
 ﻿namespace HuntingTests.Tests
 {
     using HuntingTests.Pages;
+    using NUnit.Allure.Attributes;
+    using NUnit.Allure.Core;
 
     /// <summary>
     /// Класс с тестами для "Заявка на разрешение 2017"
     /// </summary>
+    [Parallelizable]
+    [AllureParentSuite("Заявки")]
+    [AllureSuite("Заявка на добычу охотничьих ресурсов")]
+    [AllureSubSuite("Реестр")]
+    [TestFixture]
+    [AllureNUnit]
     public class ZajavkaNaRazreshenie2017Tests : BaseTestClass
     {
         private ZajavkaNaRazreshenie2017Page page;

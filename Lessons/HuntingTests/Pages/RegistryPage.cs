@@ -1,5 +1,7 @@
 ﻿namespace HuntingTests.Pages
 {
+    using Allure.Commons;
+    using NUnit.Allure.Core;
     using OpenQA.Selenium;
     using OpenQA.Selenium.Interactions;
     using SeleniumExtras.WaitHelpers;
@@ -27,18 +29,28 @@
         /// </summary>
         public override void OpenPage()
         {
-            var element = this.driver.GetElement(By.XPath("//div[@class = 'title-body']"));
-            if (element?.Text == this.registryName)
+            IWebElement element = null;
+            AllureLifecycle.Instance.WrapInStep(() =>
             {
-                return;
-            }
+                element = this.driver.GetElement(By.XPath("//div[@class = 'title-body']"));
+                if (element?.Text == this.registryName)
+                {
+                    return;
+                }
+            }, $"Проверка открытого реестра '{this.registryName}'");
 
-            this.driver.GoToUrl(path);
+            AllureLifecycle.Instance.WrapInStep(() =>
+            {
+                this.driver.GoToUrl(path);
+            }, $"Открытие страницы по {Constants.huntingUrl}{path}");
         }
 
         public void WaitRecords()
         {
-            Thread.Sleep(3000);
+            AllureLifecycle.Instance.WrapInStep(() =>
+            {
+                Thread.Sleep(3000);
+            }, $"Ожидание записей в реестре");
         }
 
         public void SetDateOperator(
@@ -48,15 +60,21 @@
             var columnHeader = this.GetColumnHeader(columnName);
             var id = this.GetColumnId(columnHeader);
 
-            this.driver.MoveToElementAndClick(
+            AllureLifecycle.Instance.WrapInStep(() =>
+            {
+                this.driver.MoveToElementAndClick(
                 By.XPath($"//div[@id = 'gridcolumn-{id}']//tr[contains(@id, 'datefield-')]//div[contains(@class, '-operator-button')]"));
-            this.driver.Click(By.XPath($"//a[contains(@class, 'x-menu-item-link')]//span[contains(text(), '{btnText}')]"),
-                TimeSpan.FromSeconds(20));
+                this.driver.Click(By.XPath($"//a[contains(@class, 'x-menu-item-link')]//span[contains(text(), '{btnText}')]"),
+                    TimeSpan.FromSeconds(20));
+            }, $"Установка оператора сравнения даты '{btnText}' для столбца '{columnName}'");
         }
 
         public void ResetFilters()
         {
-            this.driver.Click(By.XPath("//span[text() = 'Сбросить фильтрацию']"));
+            AllureLifecycle.Instance.WrapInStep(() =>
+            {
+                this.driver.Click(By.XPath("//span[text() = 'Сбросить фильтрацию']"));
+            }, $"Сброс фильтрации в реестре");
         }
 
         /// <summary>
@@ -78,9 +96,13 @@
         /// <param name="pressEnter"></param>
         public void SetFilter(string columnName, string value, bool pressEnter = false)
         {
-            var locator = By.XPath($"//div[@class = 'x-column-header-inner']//span[text() = '{columnName}']/../..//input");
+            By locator = null;
 
-            this.driver.SendKeys(locator, value, pressEnter);
+            AllureLifecycle.Instance.WrapInStep(() =>
+            {
+                locator = By.XPath($"//div[@class = 'x-column-header-inner']//span[text() = '{columnName}']/../..//input");
+                this.driver.SendKeys(locator, value, pressEnter);
+            }, $"Установка значения фильтра в значение:'{value}' в столбце:'{columnName}'");
         }
 
         /// <summary>
@@ -91,15 +113,19 @@
         public void SetStateFilter(string columnName, string value)
         {
             var columnLocator = By.XPath($"//div[@class = 'x-column-header-inner']//span[text() = '{columnName}']/../..//input");
-            var elementToClick = this.driver.GetElement(columnLocator);
+            IWebElement elementToClick = null;  
 
-            this.driver.Click(elementToClick, columnLocator, TimeSpan.FromSeconds(20));
+            AllureLifecycle.Instance.WrapInStep(() =>
+            {
+                elementToClick = this.driver.GetElement(columnLocator);
+                this.driver.Click(elementToClick, columnLocator, TimeSpan.FromSeconds(20));
 
-            this.driver.Click(
-                By.XPath($"//div[contains(@class, 'x-boundlist-list-ct')]//li[text() = '{value}']"),
-                TimeSpan.FromSeconds(20));
+                this.driver.Click(
+                    By.XPath($"//div[contains(@class, 'x-boundlist-list-ct')]//li[text() = '{value}']"),
+                    TimeSpan.FromSeconds(20));
 
-            elementToClick.SendKeys(Keys.Enter);
+                elementToClick.SendKeys(Keys.Enter);
+            }, $"Установка значения фильтра в значение:'{value}' в столбце статуса:'{columnName}'");
         }
 
         /// <summary>
@@ -109,16 +135,30 @@
         /// <param name="value"></param>
         public long GetRecordsCount()
         {
-            var isNoRecords = this.driver.IsElementExist(
-                By.XPath("//div[contains(text(), 'Нет данных для отображения')]"));
+            var isNoRecords = false;
+            AllureLifecycle.Instance.WrapInStep(() =>
+            {
+                isNoRecords = this.driver.IsElementExist(
+                 By.XPath("//div[contains(text(), 'Нет данных для отображения')]"));                
+            }, $"Проверка на пустоту реестра");
 
             if (isNoRecords)
             {
                 return 0;
             }
 
-            var pagingtoolbar = this.driver.GetElement(By.XPath("//div[contains(text(), 'Записи с')]"));
-            var rowCount = pagingtoolbar.Text.Split(' ').Last();
+            IWebElement pagingtoolbar = null;
+            string rowCount = null;
+
+            AllureLifecycle.Instance.WrapInStep(() =>
+            {
+                isNoRecords = this.driver.IsElementExist(
+                 By.XPath("//div[contains(text(), 'Нет данных для отображения')]"));
+                pagingtoolbar = this.driver.GetElement(By.XPath("//div[contains(text(), 'Записи с')]"));
+                rowCount = pagingtoolbar?.Text.Split(' ').Last();
+
+            }, $"Получение количества записейв реестре");
+            
             return Convert.ToInt64(rowCount);
         }
 
@@ -137,9 +177,14 @@
 
         public void ScrollGrid(string? startValue = null)
         {
-            var gridView = this.driver.GetElement(
+            IWebElement gridView = null;
+            var scrollStr = startValue == "0" ? " в начало" : string.Empty;
+            AllureLifecycle.Instance.WrapInStep(() =>
+            {
+                gridView = this.driver.GetElement(
                 By.XPath($"//div[contains(@id, '{this.gridIdPart}-') and contains(@id, '-body')]//div[contains(@class, 'x-grid-view')]"));
-            this.driver.ScrollIntoElement(gridView, startValue);
+                this.driver.ScrollIntoElement(gridView, startValue);
+            }, $"Прокручивание грида реестра{scrollStr}");
         }
     }
 }

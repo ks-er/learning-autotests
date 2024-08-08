@@ -1,9 +1,7 @@
 ﻿namespace HuntingTests.Pages
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-
+    using Allure.Commons;
+    using NUnit.Allure.Core;
     using OpenQA.Selenium;
 
     /// <summary>
@@ -25,7 +23,10 @@
         /// </summary>
         public virtual void OpenPage()
         {
-            this.driver.GoToUrl(path);
+            AllureLifecycle.Instance.WrapInStep(() =>
+            {
+                this.driver.GoToUrl(path);
+            }, $"Открытие страницы по {Constants.huntingUrl}{path}");
         }
 
         /// <summary>
@@ -34,13 +35,23 @@
         /// <param name="sectionName"></param>
         public void ClickToSection(string sectionName)
         {
-            this.driver.Click(By.XPath($"//div[contains(text(), '{sectionName}')]"));
+            AllureLifecycle.Instance.WrapInStep(() =>
+            {
+                this.driver.Click(By.XPath($"//div[contains(text(), '{sectionName}')]"));
+            }, $"Нажатие на раздел: {sectionName}");
         }
 
         public IWebElement GetColumnHeader(string columnName)
         {
-            var columHeader = this.driver.GetElement(
-                By.XPath($"//div[@class = 'x-column-header-inner']//span[text() = '{columnName}']"));
+            IWebElement columHeader = null;
+
+            AllureLifecycle.Instance.WrapInStep(() =>
+            {
+                columHeader = this.driver.GetElement(
+                    By.XPath($"//div[@class = 'x-column-header-inner']//span[text() = '{columnName}']"));
+
+            }, $"Получение элемента header по названияю столбца '{columnName}'");
+
             return columHeader;
         }
 
@@ -57,8 +68,11 @@
 
         public void Logout()
         {
-            this.driver.Click(
-                By.XPath("//div[contains(@class, 'desktop-bar desktop-menu')]//span[text() = 'Выход из системы']"));
+            AllureLifecycle.Instance.WrapInStep(() =>
+            {
+                this.driver.Click(
+                    By.XPath("//div[contains(@class, 'desktop-bar desktop-menu')]//span[text() = 'Выход из системы']"));
+            }, $"Выход из системы");
         }
     }
 }

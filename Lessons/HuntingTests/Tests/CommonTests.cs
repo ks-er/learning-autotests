@@ -1,10 +1,18 @@
 ﻿namespace HuntingTests.Tests
 {
     using HuntingTests.Pages;
+    using NUnit.Allure.Attributes;
+    using NUnit.Allure.Core;
 
     /// <summary>
     /// Класс с общими тестами
     /// </summary>
+    [Parallelizable]
+    [AllureParentSuite("Общий функционал")]
+    [AllureSuite("Страница setup")]
+    [AllureSubSuite("Раздел Миграции")]
+    [TestFixture]
+    [AllureNUnit]
     public class CommonTests : BaseTestClass
     {
         private ControlCenterPage page;

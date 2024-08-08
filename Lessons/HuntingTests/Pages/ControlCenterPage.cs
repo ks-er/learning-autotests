@@ -3,7 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
+    using Allure.Commons;
+    using NUnit.Allure.Core;
     using OpenQA.Selenium;
 
     /// <summary>
@@ -37,7 +38,10 @@
 
         public void GoToStartPage()
         {
-            this.driver.Click(this.GoToMainLocator);
+            AllureLifecycle.Instance.WrapInStep(() =>
+            {
+                this.driver.Click(this.GoToMainLocator);
+            }, $"Переход на главную стартовую страницу");
         }
 
         /// <summary>

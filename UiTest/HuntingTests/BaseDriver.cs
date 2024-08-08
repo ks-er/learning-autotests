@@ -7,6 +7,7 @@
     using OpenQA.Selenium;
     using OpenQA.Selenium.Chrome;
     using OpenQA.Selenium.Interactions;
+    using OpenQA.Selenium.Remote;
     using OpenQA.Selenium.Support.Extensions;
     using OpenQA.Selenium.Support.UI;
     using SeleniumExtras.WaitHelpers;
@@ -23,12 +24,14 @@
 
         private Actions actions;
 
+        private string remoteWd = "http://localhost:4444/";
+
         /// <summary>
         /// Инициализация браузера
         /// </summary>
         public BaseDriver()
         {
-            this.driver = this.StartBrowser();
+            this.driver = this.StartRemoteBrowser();
             this.actions = new Actions(this.driver);
         }
 
@@ -40,6 +43,24 @@
         { 
             var driver = new ChromeDriver();
             driver.Manage().Window.Maximize();
+
+            return driver;
+        }
+
+        private RemoteWebDriver StartRemoteBrowser()
+        {
+            var options = new ChromeOptions();
+
+            var selenoidOptions = new Dictionary<string, object>();
+            selenoidOptions.Add("enableVNC", true);
+            selenoidOptions.Add("browser", "chrome");
+            selenoidOptions.Add("version", "126.0");
+
+            options.AddAdditionalOption("selenoid:options", selenoidOptions);
+            options.AddArgument("start-maximized");
+
+            var driver = new RemoteWebDriver(
+                new Uri(this.remoteWd + "wd" + Path.DirectorySeparatorChar + "hub"), options.ToCapabilities());
 
             return driver;
         }
